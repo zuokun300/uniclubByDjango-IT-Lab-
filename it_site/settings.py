@@ -31,6 +31,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     "core",
 ]
 
@@ -106,6 +111,28 @@ if ENABLE_HTTPS:
     SECURE_HSTS_PRELOAD = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SITE_ID = int(os.environ.get("DJANGO_SITE_ID", "1"))
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+    }
+}
+
+SOCIALACCOUNT_ADAPTER = "core.adapters.DomainRestrictedSocialAccountAdapter"
+
+SOCIAL_ALLOWED_EMAIL_DOMAINS = [
+    domain.strip().lower()
+    for domain in os.environ.get("DJANGO_SOCIAL_ALLOWED_EMAIL_DOMAINS", "").split(",")
+    if domain.strip()
+]
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
