@@ -13,13 +13,24 @@
     <a class="button social-button" href="{% provider_login_url 'google' process='login' %}">
       Continue with Google
     </a>
-    <p class="meta">Google sign-in is limited to University of Glasgow email addresses.</p>
+    <p class="meta">Use this option for a personal or Google Workspace account.</p>
+  </div>
+  {% endif %}
+
+  {% if microsoft_login_enabled %}
+  <div class="social-auth-panel">
+    <a class="button social-button secondary" href="{% provider_login_url 'microsoft' process='login' %}">
+      Continue with University of Glasgow email
+    </a>
+    <p class="meta">Use your University of Glasgow Microsoft 365 account.</p>
     {% if social_allowed_email_domains %}
     <p class="meta">Allowed domains: {{ social_allowed_email_domains|join:", " }}</p>
     {% endif %}
   </div>
-  {% else %}
-  <p class="meta">Google sign-in will appear here after OAuth credentials are configured.</p>
+  {% endif %}
+
+  {% if not google_login_enabled and not microsoft_login_enabled %}
+  <p class="meta">Social sign-in will appear here after OAuth credentials are configured.</p>
   {% endif %}
 
   <form method="post" novalidate>

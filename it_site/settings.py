@@ -4,6 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 def to_bool(value, default=False):
     if value is None:
         return default
@@ -33,6 +34,11 @@ GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "").strip()
 GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "").strip()
 GOOGLE_OAUTH_ENABLED = bool(GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET)
 
+MICROSOFT_OAUTH_CLIENT_ID = os.environ.get("MICROSOFT_OAUTH_CLIENT_ID", "").strip()
+MICROSOFT_OAUTH_CLIENT_SECRET = os.environ.get("MICROSOFT_OAUTH_CLIENT_SECRET", "").strip()
+MICROSOFT_OAUTH_TENANT = os.environ.get("MICROSOFT_OAUTH_TENANT", "organizations").strip()
+MICROSOFT_OAUTH_ENABLED = bool(MICROSOFT_OAUTH_CLIENT_ID and MICROSOFT_OAUTH_CLIENT_SECRET)
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -45,6 +51,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.microsoft",
     "core",
 ]
 
@@ -147,7 +154,25 @@ SOCIALACCOUNT_PROVIDERS = {
             if GOOGLE_OAUTH_ENABLED
             else {}
         ),
-    }
+    },
+    "microsoft": {
+        "SCOPE": ["User.Read"],
+        "AUTH_PARAMS": {
+            "prompt": "select_account",
+        },
+        "TENANT": MICROSOFT_OAUTH_TENANT,
+        **(
+            {
+                "APP": {
+                    "client_id": MICROSOFT_OAUTH_CLIENT_ID,
+                    "secret": MICROSOFT_OAUTH_CLIENT_SECRET,
+                    "key": "",
+                }
+            }
+            if MICROSOFT_OAUTH_ENABLED
+            else {}
+        ),
+    },
 }
 
 SOCIALACCOUNT_ADAPTER = "core.adapters.DomainRestrictedSocialAccountAdapter"
@@ -158,6 +183,13 @@ SOCIAL_ALLOWED_EMAIL_DOMAINS = [
     for domain in to_csv_list(
         os.environ.get("DJANGO_SOCIAL_ALLOWED_EMAIL_DOMAINS"),
         default="glasgow.ac.uk,student.gla.ac.uk",
+    )
+]
+SOCIAL_DOMAIN_RESTRICTED_PROVIDERS = [
+    provider.lower()
+    for provider in to_csv_list(
+        os.environ.get("DJANGO_SOCIAL_DOMAIN_RESTRICTED_PROVIDERS"),
+        default="microsoft",
     )
 ]
 

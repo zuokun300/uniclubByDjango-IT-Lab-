@@ -21,10 +21,14 @@ python3 manage.py runserver
 
 Open `http://127.0.0.1:8000`.
 
-## Google sign-in for University of Glasgow accounts
+## Social sign-in options
 
-This project supports Google OAuth login through `django-allauth`.
-Only University of Glasgow email domains are allowed by default:
+This project supports two separate third-party sign-in options through `django-allauth`:
+
+- Google sign-in for personal or Google Workspace accounts
+- University of Glasgow sign-in through Microsoft 365
+
+The University of Glasgow option is restricted to these email domains by default:
 
 - `glasgow.ac.uk`
 - `student.gla.ac.uk`
@@ -34,16 +38,20 @@ Set these environment variables before running the server:
 ```bash
 export GOOGLE_OAUTH_CLIENT_ID="your-google-client-id"
 export GOOGLE_OAUTH_CLIENT_SECRET="your-google-client-secret"
+export MICROSOFT_OAUTH_CLIENT_ID="your-microsoft-client-id"
+export MICROSOFT_OAUTH_CLIENT_SECRET="your-microsoft-client-secret"
+export MICROSOFT_OAUTH_TENANT="organizations"
 export DJANGO_SOCIAL_ALLOWED_EMAIL_DOMAINS="glasgow.ac.uk,student.gla.ac.uk"
 ```
 
-Recommended Google OAuth redirect URI:
+Recommended OAuth redirect URIs:
 
 ```text
 http://127.0.0.1:8000/accounts/google/login/callback/
+http://127.0.0.1:8000/accounts/microsoft/login/callback/
 ```
 
-When deployed, replace the hostname with your production domain and add the same callback URL in the Google Cloud console.
+When deployed, replace the hostname with your production domain and add the matching callback URLs in Google Cloud and Microsoft Entra.
 
 ## Run tests
 

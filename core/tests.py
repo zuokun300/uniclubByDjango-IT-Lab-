@@ -86,16 +86,16 @@ class AuthenticationTests(TestCase):
         response = self.client.get(reverse("home"))
         self.assertContains(response, reverse("register"))
 
-    @override_settings(GOOGLE_OAUTH_ENABLED=True)
-    def test_login_page_shows_google_sign_in_when_configured(self):
+    @override_settings(GOOGLE_OAUTH_ENABLED=True, MICROSOFT_OAUTH_ENABLED=True)
+    def test_login_page_shows_google_and_uofg_sign_in_when_configured(self):
         response = self.client.get(reverse("login"))
         self.assertContains(response, "Continue with Google")
-        self.assertContains(response, "University of Glasgow email addresses")
+        self.assertContains(response, "Continue with University of Glasgow email")
 
-    @override_settings(GOOGLE_OAUTH_ENABLED=False)
-    def test_login_page_shows_google_setup_message_when_not_configured(self):
+    @override_settings(GOOGLE_OAUTH_ENABLED=False, MICROSOFT_OAUTH_ENABLED=False)
+    def test_login_page_shows_setup_message_when_social_sign_in_is_not_configured(self):
         response = self.client.get(reverse("login"))
-        self.assertContains(response, "Google sign-in will appear here after OAuth credentials are configured.")
+        self.assertContains(response, "Social sign-in will appear here after OAuth credentials are configured.")
 
 
 class SocialAccountAdapterTests(TestCase):
@@ -109,20 +109,45 @@ class SocialAccountAdapterTests(TestCase):
         setattr(request, "_messages", FallbackStorage(request))
         return request
 
-    @override_settings(SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"])
-    def test_adapter_allows_university_of_glasgow_domains(self):
+    @override_settings(
+        SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"],
+        SOCIAL_DOMAIN_RESTRICTED_PROVIDERS=["microsoft"],
+    )
+    def test_adapter_allows_university_of_glasgow_domain_for_microsoft_login(self):
         request = self.build_request()
-        sociallogin = SimpleNamespace(user=SimpleNamespace(email="student@student.gla.ac.uk"))
+        sociallogin = SimpleNamespace(
+            user=SimpleNamespace(email="student@student.gla.ac.uk"),
+            account=SimpleNamespace(provider="microsoft"),
+        )
 
         DomainRestrictedSocialAccountAdapter(request).pre_social_login(request, sociallogin)
 
-    @override_settings(SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"])
-    def test_adapter_rejects_non_university_domain(self):
+    @override_settings(
+        SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"],
+        SOCIAL_DOMAIN_RESTRICTED_PROVIDERS=["microsoft"],
+    )
+    def test_adapter_rejects_non_uofg_domain_for_microsoft_login(self):
         request = self.build_request()
-        sociallogin = SimpleNamespace(user=SimpleNamespace(email="user@example.com"))
+        sociallogin = SimpleNamespace(
+            user=SimpleNamespace(email="user@example.com"),
+            account=SimpleNamespace(provider="microsoft"),
+        )
 
         with self.assertRaises(ImmediateHttpResponse):
             DomainRestrictedSocialAccountAdapter(request).pre_social_login(request, sociallogin)
+
+    @override_settings(
+        SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"],
+        SOCIAL_DOMAIN_RESTRICTED_PROVIDERS=["microsoft"],
+    )
+    def test_adapter_does_not_restrict_google_login(self):
+        request = self.build_request()
+        sociallogin = SimpleNamespace(
+            user=SimpleNamespace(email="person@gmail.com"),
+            account=SimpleNamespace(provider="google"),
+        )
+
+        DomainRestrictedSocialAccountAdapter(request).pre_social_login(request, sociallogin)
 
 
 class EventInteractionTests(TestCase):

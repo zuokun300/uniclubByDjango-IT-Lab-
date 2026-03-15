@@ -10,12 +10,18 @@ class DomainRestrictedSocialAccountAdapter(DefaultSocialAccountAdapter):
         super().pre_social_login(request, sociallogin)
 
         allowed_domains = getattr(settings, "SOCIAL_ALLOWED_EMAIL_DOMAINS", [])
-        if not allowed_domains:
+        restricted_providers = {
+            provider.lower()
+            for provider in getattr(settings, "SOCIAL_DOMAIN_RESTRICTED_PROVIDERS", [])
+        }
+        provider = getattr(getattr(sociallogin, "account", None), "provider", "").lower()
+
+        if not allowed_domains or provider not in restricted_providers:
             return
 
         email = (sociallogin.user.email or "").strip().lower()
         domain = email.split("@")[-1] if "@" in email else ""
 
         if domain not in allowed_domains:
-            messages.error(request, "Your email domain is not allowed for social sign in.")
+            messages.error(request, "Please use your University of Glasgow email account.")
             raise ImmediateHttpResponse(redirect("login"))
