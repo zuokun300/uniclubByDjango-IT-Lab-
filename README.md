@@ -33,7 +33,7 @@ The University of Glasgow option is restricted to these email domains by default
 - `glasgow.ac.uk`
 - `student.gla.ac.uk`
 
-Set these environment variables before running the server:
+Set these environment variables before running the server, or place them in a project-level `.env` file for local development:
 
 ```bash
 export GOOGLE_OAUTH_CLIENT_ID="your-google-client-id"
@@ -52,6 +52,8 @@ http://127.0.0.1:8000/accounts/microsoft/login/callback/
 ```
 
 When deployed, replace the hostname with your production domain and add the matching callback URLs in Google Cloud and Microsoft Entra.
+
+For local development, the project now auto-loads `.env` from the repository root, so you do not need to run `export` commands each time.
 
 ## Run tests
 
