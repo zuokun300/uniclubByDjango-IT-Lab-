@@ -1,10 +1,17 @@
 from datetime import timedelta
+from types import SimpleNamespace
 
+from allauth.exceptions import ImmediateHttpResponse
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.auth import get_user_model
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.test import RequestFactory
 from django.test import TestCase
+from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
 
+from .adapters import DomainRestrictedSocialAccountAdapter
 from .models import Club, Comment, Event, Membership, Registration
 
 
@@ -78,6 +85,44 @@ class AuthenticationTests(TestCase):
     def test_home_shows_register_link_for_guests(self):
         response = self.client.get(reverse("home"))
         self.assertContains(response, reverse("register"))
+
+    @override_settings(GOOGLE_OAUTH_ENABLED=True)
+    def test_login_page_shows_google_sign_in_when_configured(self):
+        response = self.client.get(reverse("login"))
+        self.assertContains(response, "Continue with Google")
+        self.assertContains(response, "University of Glasgow email addresses")
+
+    @override_settings(GOOGLE_OAUTH_ENABLED=False)
+    def test_login_page_shows_google_setup_message_when_not_configured(self):
+        response = self.client.get(reverse("login"))
+        self.assertContains(response, "Google sign-in will appear here after OAuth credentials are configured.")
+
+
+class SocialAccountAdapterTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def build_request(self):
+        request = self.factory.get(reverse("login"))
+        SessionMiddleware(lambda req: None).process_request(request)
+        request.session.save()
+        setattr(request, "_messages", FallbackStorage(request))
+        return request
+
+    @override_settings(SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"])
+    def test_adapter_allows_university_of_glasgow_domains(self):
+        request = self.build_request()
+        sociallogin = SimpleNamespace(user=SimpleNamespace(email="student@student.gla.ac.uk"))
+
+        DomainRestrictedSocialAccountAdapter(request).pre_social_login(request, sociallogin)
+
+    @override_settings(SOCIAL_ALLOWED_EMAIL_DOMAINS=["glasgow.ac.uk", "student.gla.ac.uk"])
+    def test_adapter_rejects_non_university_domain(self):
+        request = self.build_request()
+        sociallogin = SimpleNamespace(user=SimpleNamespace(email="user@example.com"))
+
+        with self.assertRaises(ImmediateHttpResponse):
+            DomainRestrictedSocialAccountAdapter(request).pre_social_login(request, sociallogin)
 
 
 class EventInteractionTests(TestCase):

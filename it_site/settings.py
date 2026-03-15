@@ -10,6 +10,11 @@ def to_bool(value, default=False):
     return str(value).strip().lower() in {"1", "true", "yes", "on"}
 
 
+def to_csv_list(value, default=""):
+    source = default if value is None else value
+    return [item.strip() for item in str(source).split(",") if item.strip()]
+
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-it-coursework-local-only")
 DEBUG = to_bool(os.environ.get("DJANGO_DEBUG"), default=True)
 ALLOWED_HOSTS = [
@@ -23,6 +28,10 @@ CSRF_TRUSTED_ORIGINS = [
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
+
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "").strip()
+GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "").strip()
+GOOGLE_OAUTH_ENABLED = bool(GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -63,6 +72,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.social_auth_context",
             ],
         },
     },
@@ -122,16 +132,33 @@ AUTHENTICATION_BACKENDS = [
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {"access_type": "online"},
+        "AUTH_PARAMS": {
+            "access_type": "online",
+            "prompt": "select_account",
+        },
+        **(
+            {
+                "APP": {
+                    "client_id": GOOGLE_OAUTH_CLIENT_ID,
+                    "secret": GOOGLE_OAUTH_CLIENT_SECRET,
+                    "key": "",
+                }
+            }
+            if GOOGLE_OAUTH_ENABLED
+            else {}
+        ),
     }
 }
 
 SOCIALACCOUNT_ADAPTER = "core.adapters.DomainRestrictedSocialAccountAdapter"
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIAL_ALLOWED_EMAIL_DOMAINS = [
-    domain.strip().lower()
-    for domain in os.environ.get("DJANGO_SOCIAL_ALLOWED_EMAIL_DOMAINS", "").split(",")
-    if domain.strip()
+    domain.lower()
+    for domain in to_csv_list(
+        os.environ.get("DJANGO_SOCIAL_ALLOWED_EMAIL_DOMAINS"),
+        default="glasgow.ac.uk,student.gla.ac.uk",
+    )
 ]
 
 LOGIN_URL = "login"

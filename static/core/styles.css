@@ -297,6 +297,19 @@ textarea {
   box-shadow: none;
 }
 
+.social-auth-panel {
+  margin: 1rem 0 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-strong);
+}
+
+.social-button {
+  width: 100%;
+  margin-bottom: 0.6rem;
+}
+
 .search-form,
 .field,
 .comment-form {
