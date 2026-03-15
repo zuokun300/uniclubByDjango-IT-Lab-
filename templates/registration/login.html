@@ -4,36 +4,13 @@
 {% block title %}Log in | UniClub Hub{% endblock %}
 
 {% block content %}
-<section class="card form-card narrow">
-  <h1>Log in</h1>
-  <p class="meta">Use an existing account or <a href="{% url 'register' %}">create a new one</a>.</p>
-
-  {% if google_login_enabled %}
-  <div class="social-auth-panel">
-    <a class="button social-button" href="{% provider_login_url 'google' process='login' %}">
-      Continue with Google
-    </a>
-    <p class="meta">Use this option for a personal or Google Workspace account.</p>
+<section class="card form-card narrow login-shell">
+  <div class="login-header stack">
+    <h1>Log in</h1>
+    <p class="meta">Use an existing account or <a href="{% url 'register' %}">create a new one</a>.</p>
   </div>
-  {% endif %}
 
-  {% if microsoft_login_enabled %}
-  <div class="social-auth-panel">
-    <a class="button social-button secondary" href="{% provider_login_url 'microsoft' process='login' %}">
-      Continue with University of Glasgow email
-    </a>
-    <p class="meta">Use your University of Glasgow Microsoft 365 account.</p>
-    {% if social_allowed_email_domains %}
-    <p class="meta">Allowed domains: {{ social_allowed_email_domains|join:", " }}</p>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  {% if not google_login_enabled and not microsoft_login_enabled %}
-  <p class="meta">Social sign-in will appear here after OAuth credentials are configured.</p>
-  {% endif %}
-
-  <form method="post" novalidate>
+  <form method="post" novalidate class="stack login-form-block">
     {% csrf_token %}
     {% if form.errors %}
     <div class="error-summary" role="alert">
@@ -49,5 +26,54 @@
     <button class="button" type="submit">Log in</button>
     <input type="hidden" name="next" value="{{ next }}">
   </form>
+
+  {% if google_login_enabled or microsoft_login_enabled %}
+  <div class="login-divider" aria-hidden="true">
+    <span>or continue with</span>
+  </div>
+
+  <div class="social-auth-group stack-large">
+    {% if google_login_enabled %}
+    <a class="social-auth-card social-auth-card-google" href="{% provider_login_url 'google' process='login' %}">
+      <span class="social-auth-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+          <path fill="#EA4335" d="M12 10.2v4.15h5.88c-.26 1.34-1.8 3.92-5.88 3.92-3.54 0-6.42-2.93-6.42-6.55s2.88-6.55 6.42-6.55c2.02 0 3.37.86 4.15 1.6l2.83-2.73C17.16 2.36 14.87 1.4 12 1.4 6.8 1.4 2.6 5.67 2.6 10.94S6.8 20.48 12 20.48c6.93 0 9.18-4.84 9.18-7.34 0-.49-.05-.84-.12-1.2H12Z"/>
+          <path fill="#4285F4" d="M21.06 12.9c0-.49-.05-.84-.12-1.2H12v4.15h5.88c-.26 1.34-1.8 3.92-5.88 3.92v2.71h4.77c2.79-2.57 4.29-6.34 4.29-9.58Z" opacity=".95"/>
+          <path fill="#FBBC05" d="M5.58 14.63a6.64 6.64 0 0 1 0-4.21V7.71H2.62a9.66 9.66 0 0 0 0 8.63l2.96-1.71Z"/>
+          <path fill="#34A853" d="M12 20.48c2.87 0 5.28-.94 7.04-2.55l-3.27-2.71c-.88.61-2.06 1.04-3.77 1.04-4.08 0-5.62-2.58-5.88-3.92l-2.96 1.71C4.88 17.93 8.13 20.48 12 20.48Z"/>
+        </svg>
+      </span>
+      <span class="social-auth-copy">
+        <strong>Google</strong>
+        <span>Continue with your personal or Google Workspace account</span>
+      </span>
+      <span class="social-auth-arrow" aria-hidden="true">→</span>
+    </a>
+    {% endif %}
+
+    {% if microsoft_login_enabled %}
+    <a class="social-auth-card social-auth-card-microsoft" href="{% provider_login_url 'microsoft' process='login' %}">
+      <span class="social-auth-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+          <rect x="2" y="2" width="9" height="9" fill="#F25022"/>
+          <rect x="13" y="2" width="9" height="9" fill="#7FBA00"/>
+          <rect x="2" y="13" width="9" height="9" fill="#00A4EF"/>
+          <rect x="13" y="13" width="9" height="9" fill="#FFB900"/>
+        </svg>
+      </span>
+      <span class="social-auth-copy">
+        <strong>University of Glasgow Email</strong>
+        <span>Sign in with your Microsoft 365 campus account</span>
+      </span>
+      <span class="social-auth-arrow" aria-hidden="true">→</span>
+    </a>
+    {% if social_allowed_email_domains %}
+    <p class="meta social-auth-note">Allowed domains: {{ social_allowed_email_domains|join:", " }}</p>
+    {% endif %}
+    {% endif %}
+  </div>
+  {% else %}
+  <p class="meta social-auth-empty">Social sign-in will appear here after OAuth credentials are configured.</p>
+  {% endif %}
 </section>
 {% endblock %}

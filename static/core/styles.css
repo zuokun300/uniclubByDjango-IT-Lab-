@@ -297,17 +297,122 @@ textarea {
   box-shadow: none;
 }
 
-.social-auth-panel {
-  margin: 1rem 0 1.25rem;
-  padding: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--surface-strong);
+.login-shell {
+  display: grid;
+  gap: 1.5rem;
 }
 
-.social-button {
-  width: 100%;
-  margin-bottom: 0.6rem;
+.login-header {
+  gap: 0.55rem;
+}
+
+.login-form-block {
+  gap: 0.9rem;
+}
+
+.login-divider {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-divider::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  border-top: 1px solid var(--line);
+}
+
+.login-divider span {
+  position: relative;
+  z-index: 1;
+  padding: 0 0.8rem;
+  background: rgba(255, 253, 247, 0.92);
+}
+
+.social-auth-group {
+  gap: 1rem;
+}
+
+.social-auth-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface-strong);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.social-auth-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(31, 41, 51, 0.08);
+  border-color: rgba(15, 94, 87, 0.35);
+}
+
+.social-auth-card-google {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(249, 246, 239, 0.95));
+}
+
+.social-auth-card-microsoft {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(240, 247, 255, 0.9));
+}
+
+.social-auth-logo {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(215, 209, 197, 0.8);
+  box-shadow: 0 6px 16px rgba(31, 41, 51, 0.06);
+}
+
+.social-auth-logo svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.social-auth-copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.social-auth-copy strong {
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.social-auth-copy span {
+  color: var(--muted);
+  font-size: 0.96rem;
+}
+
+.social-auth-arrow {
+  color: var(--brand);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.social-auth-note,
+.social-auth-empty {
+  margin: -0.4rem 0 0;
 }
 
 .search-form,
@@ -458,5 +563,15 @@ body.high-contrast {
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .social-auth-card {
+    grid-template-columns: auto 1fr;
+  }
+
+  .social-auth-arrow {
+    display: none;
   }
 }

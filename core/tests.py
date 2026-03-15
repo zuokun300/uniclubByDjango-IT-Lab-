@@ -89,8 +89,8 @@ class AuthenticationTests(TestCase):
     @override_settings(GOOGLE_OAUTH_ENABLED=True, MICROSOFT_OAUTH_ENABLED=True)
     def test_login_page_shows_google_and_uofg_sign_in_when_configured(self):
         response = self.client.get(reverse("login"))
-        self.assertContains(response, "Continue with Google")
-        self.assertContains(response, "Continue with University of Glasgow email")
+        self.assertContains(response, "Google")
+        self.assertContains(response, "University of Glasgow Email")
 
     @override_settings(GOOGLE_OAUTH_ENABLED=False, MICROSOFT_OAUTH_ENABLED=False)
     def test_login_page_shows_setup_message_when_social_sign_in_is_not_configured(self):
