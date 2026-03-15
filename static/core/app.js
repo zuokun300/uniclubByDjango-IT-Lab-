@@ -106,7 +106,17 @@ function wireCommentForms() {
       }
 
       const item = document.createElement("li");
-      item.innerHTML = `<strong>${payload.author}</strong> <span class="meta">${payload.created_at}</span><p>${payload.content}</p>`;
+      const author = document.createElement("strong");
+      author.textContent = payload.author;
+
+      const timestamp = document.createElement("span");
+      timestamp.className = "meta";
+      timestamp.textContent = payload.created_at;
+
+      const content = document.createElement("p");
+      content.textContent = payload.content;
+
+      item.append(author, document.createTextNode(" "), timestamp, content);
       list.prepend(item);
       form.reset();
       status.textContent = "Comment posted.";

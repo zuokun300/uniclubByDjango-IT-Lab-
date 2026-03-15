@@ -157,6 +157,21 @@ class EventInteractionTests(TestCase):
         self.assertTrue(Comment.objects.filter(event=self.event, user=self.user).exists())
         self.assertEqual(response.json()["author"], "participant")
 
+    def test_anonymous_user_is_redirected_from_event_create_page(self):
+        response = self.client.get(reverse("event_create", args=[self.club.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("login"), response.url)
+
+    def test_anonymous_user_is_redirected_from_event_update_page(self):
+        response = self.client.get(reverse("event_update", args=[self.event.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("login"), response.url)
+
+    def test_anonymous_user_is_redirected_from_event_delete_page(self):
+        response = self.client.get(reverse("event_delete", args=[self.event.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("login"), response.url)
+
     def test_only_club_founder_can_access_event_create_page(self):
         self.client.login(username="visitor", password="pass12345")
         response = self.client.get(reverse("event_create", args=[self.club.pk]))

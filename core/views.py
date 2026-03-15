@@ -123,6 +123,9 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     template_name = "core/form.html"
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+
         self.club = get_object_or_404(Club, pk=kwargs["club_pk"])
         if self.club.founded_by_id != request.user.id:
             raise PermissionDenied("Only the club founder can create events.")
@@ -148,6 +151,9 @@ class EventFounderRequiredMixin(LoginRequiredMixin):
         return Event.objects.select_related("club__founded_by")
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+
         self.event = self.get_object()
         if self.event.club.founded_by_id != request.user.id:
             raise PermissionDenied("Only the club founder can manage this event.")
@@ -209,7 +215,11 @@ class SignUpView(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.object)
+        login(
+            self.request,
+            self.object,
+            backend="django.contrib.auth.backends.ModelBackend",
+        )
         messages.success(self.request, "Account created successfully.")
         return response
 
