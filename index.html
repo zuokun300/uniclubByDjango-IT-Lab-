@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IT Coursework Web Application Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="hero">
+    <div class="hero__overlay"></div>
+    <div class="container hero__content">
+      <p class="eyebrow">Internet Technology (M)</p>
+      <h1>Web Application Implementation Report</h1>
+      <p class="hero__desc">A sample webpage aligned with coursework requirements: responsive layout, frontend interactivity, accessibility improvements, and sustainability optimization notes.</p>
+      <button id="themeToggle" class="btn" type="button" aria-pressed="false" aria-label="Toggle high-contrast mode">High Contrast Mode</button>
+    </div>
+  </header>
+
+  <main id="main-content" class="container" tabindex="-1">
+    <section class="card" aria-labelledby="deadline-title">
+      <h2 id="deadline-title">Key Assignment Information</h2>
+      <ul class="meta-list">
+        <li><strong>Module:</strong> Internet Technology (M)</li>
+        <li><strong>Assignment:</strong> Web Application Implementation Report (30%)</li>
+        <li><strong>Deadline:</strong> 2026-03-19 16:30</li>
+        <li><strong>Submission:</strong> PDF report + project ZIP + public repository + accessible deployed URL</li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="req-title">
+      <h2 id="req-title">Functional and Technical Checklist</h2>
+      <div class="grid two-col" id="checklist" role="group" aria-label="Course requirement checklist">
+        <label><input type="checkbox" class="req-item"> User authentication (login/logout/access control)</label>
+        <label><input type="checkbox" class="req-item"> Database interaction (CRUD or equivalent)</label>
+        <label><input type="checkbox" class="req-item"> User input processed by the system</label>
+        <label><input type="checkbox" class="req-item"> Frontend interactivity (JS/AJAX/framework)</label>
+        <label><input type="checkbox" class="req-item"> Responsive UI (mobile/tablet/desktop)</label>
+        <label><input type="checkbox" class="req-item"> At least 3 accessibility improvements</label>
+        <label><input type="checkbox" class="req-item"> Sustainability evaluation (Lighthouse before/after)</label>
+        <label><input type="checkbox" class="req-item"> Core unit tests</label>
+      </div>
+      <p id="progressText" class="progress" aria-live="polite">Completed 0 / 8 items</p>
+    </section>
+
+    <section class="card" aria-labelledby="report-title">
+      <h2 id="report-title">Recommended Report Structure</h2>
+      <ol>
+        <li>Introduction + repository and deployment links (≤0.5 page)</li>
+        <li>Updated Design Specification (≤6 pages)</li>
+        <li>Implementation Highlights (≤2 pages)</li>
+        <li>Testing (≤1 page)</li>
+        <li>Accessibility Report (≤1 page)</li>
+        <li>Sustainability Report (≤1 page)</li>
+        <li>Appendix: Team Contribution + AI Use Statement (≤0.5 page)</li>
+      </ol>
+    </section>
+
+    <section class="card" aria-labelledby="ai-title">
+      <h2 id="ai-title">AI Use Statement Generator (Example)</h2>
+      <form id="aiForm" novalidate>
+        <div class="grid two-col">
+          <label for="tools">Tools used
+            <input id="tools" name="tools" type="text" placeholder="e.g. ChatGPT, Copilot" required>
+          </label>
+          <label for="parts">Affected parts
+            <input id="parts" name="parts" type="text" placeholder="e.g. code/tests/report" required>
+          </label>
+        </div>
+        <label for="validation">Validation method
+          <textarea id="validation" name="validation" rows="3" placeholder="e.g. run unit tests and cross-check with official docs" required></textarea>
+        </label>
+        <button class="btn" type="submit">Generate statement</button>
+        <p id="formError" class="error" role="alert" aria-live="assertive"></p>
+      </form>
+      <pre id="aiOutput" class="output" aria-live="polite"></pre>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <p>This page keeps files separated as required: HTML / CSS / JavaScript. You can run it directly by opening <code>index.html</code>.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

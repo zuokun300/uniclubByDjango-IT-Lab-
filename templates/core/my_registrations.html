@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}My Registrations | UniClub Hub{% endblock %}
+
+{% block content %}
+<section class="section-head">
+  <div>
+    <h1>My registrations</h1>
+    <p>Manage your event participation records.</p>
+  </div>
+</section>
+
+<section class="card-grid" aria-label="My registration records">
+  {% for registration in registrations %}
+  <article class="card">
+    <h2>{{ registration.event.event_name }}</h2>
+    <p class="meta">{{ registration.event.club.club_name }} | {{ registration.event.event_date|date:"Y-m-d H:i" }}</p>
+    <p><strong>Status:</strong> {{ registration.get_status_display }}</p>
+    <div class="event-actions">
+      <a class="button secondary" href="{% url 'club_detail' registration.event.club_id %}">Open club page</a>
+    {% if registration.status != "cancelled" %}
+    <form method="post" action="{% url 'cancel_registration' registration.pk %}">
+      {% csrf_token %}
+      <button class="button danger" type="submit">Cancel registration</button>
+    </form>
+    {% endif %}
+    </div>
+  </article>
+  {% empty %}
+  <article class="card"><p>You have not registered for any events yet.</p></article>
+  {% endfor %}
+</section>
+{% endblock %}

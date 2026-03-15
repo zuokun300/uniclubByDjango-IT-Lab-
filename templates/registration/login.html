@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Log in | UniClub Hub{% endblock %}
+
+{% block content %}
+<section class="card form-card narrow">
+  <h1>Log in</h1>
+  <p class="meta">Use an existing account or <a href="{% url 'register' %}">create a new one</a>.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.errors %}
+    <div class="error-summary" role="alert">
+      <p>Your username or password was not recognised.</p>
+    </div>
+    {% endif %}
+    {% for field in form %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+    </div>
+    {% endfor %}
+    <button class="button" type="submit">Log in</button>
+    <input type="hidden" name="next" value="{{ next }}">
+  </form>
+</section>
+{% endblock %}

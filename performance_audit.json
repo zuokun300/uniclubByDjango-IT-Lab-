@@ -1,0 +1,22 @@
+{
+  "tool": "Local HTTP size/latency audit script",
+  "generated_at": "2026-03-11 19:46:28 UTC",
+  "results": [
+    {
+      "url": "http://127.0.0.1:8000/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 5643,
+      "elapsed_ms": 90.02,
+      "label": "homepage"
+    },
+    {
+      "url": "http://127.0.0.1:8000/clubs/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 2774,
+      "elapsed_ms": 32.71,
+      "label": "club_list"
+    }
+  ]
+}

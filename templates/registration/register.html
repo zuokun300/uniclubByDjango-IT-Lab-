@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Register | UniClub Hub{% endblock %}
+
+{% block content %}
+<section class="card form-card narrow">
+  <h1>Create account</h1>
+  <p class="meta">Register to create clubs, join activities, and comment on events.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.errors %}
+    <div class="error-summary" role="alert">
+      <p>Please fix the highlighted fields.</p>
+    </div>
+    {% endif %}
+    {% for field in form %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}
+      <p class="meta">{{ field.help_text }}</p>
+      {% endif %}
+      {% for error in field.errors %}
+      <p class="field-error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endfor %}
+    <button class="button" type="submit">Create account</button>
+  </form>
+</section>
+{% endblock %}

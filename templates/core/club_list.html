@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Clubs | UniClub Hub{% endblock %}
+
+{% block content %}
+<section class="section-head">
+  <div>
+    <h1>Clubs directory</h1>
+  </div>
+  <form class="search-form" method="get">
+    <label for="club-search">Search clubs</label>
+    <input id="club-search" name="q" type="search" value="{{ request.GET.q }}" placeholder="e.g. Music">
+    <button class="button" type="submit">Search</button>
+  </form>
+</section>
+
+<section class="card-grid" aria-label="Club results">
+  {% for club in clubs %}
+  <article class="card club-card">
+    <h2><a href="{% url 'club_detail' club.pk %}">{{ club.club_name }}</a></h2>
+    <p>{{ club.description|truncatewords:28 }}</p>
+    <p class="meta">{{ club.memberships.count }} members | {{ club.events.count }} events</p>
+    {% if user.is_authenticated and club.pk not in member_club_ids %}
+    <form method="post" action="{% url 'join_club' club.pk %}">
+      {% csrf_token %}
+      <button class="button secondary" type="submit">Join club</button>
+    </form>
+    {% endif %}
+  </article>
+  {% empty %}
+  <article class="card"><p>No clubs match that search.</p></article>
+  {% endfor %}
+</section>
+{% endblock %}

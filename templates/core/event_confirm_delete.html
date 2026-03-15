@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Event | UniClub Hub{% endblock %}
+
+{% block content %}
+<section class="card form-card narrow">
+  <h1>Delete event</h1>
+  <p class="meta">You are about to delete: <strong>{{ object.event_name }}</strong>.</p>
+  <p>This action cannot be undone.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="button" type="submit">Confirm delete</button>
+    <a class="button secondary" href="{% url 'club_detail' object.club_id %}">Cancel</a>
+  </form>
+</section>
+{% endblock %}
