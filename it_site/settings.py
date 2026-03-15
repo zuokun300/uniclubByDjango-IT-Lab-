@@ -18,7 +18,7 @@ def load_local_env(env_path):
         key = key.strip()
         value = value.strip().strip('"').strip("'")
         if key:
-            os.environ.setdefault(key, value)
+            os.environ[key] = value
 
 
 load_local_env(BASE_DIR / ".env")
