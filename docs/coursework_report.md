@@ -4,9 +4,9 @@
 
 UniClub Hub is a Django web application for discovering student clubs, joining communities, registering for events, and posting event comments. The implemented system keeps the back end in Python/Django and the front end in Django templates enhanced with separate CSS and JavaScript assets.
 
-Repository URL: `TO_BE_FILLED`
+Repository URL: `https://github.com/zuokun300/uniclubByDjango-IT-Lab-`
 
-Deployed application URL: `TO_BE_FILLED`
+Deployed application URL: `https://kzbyzk.it.com`
 
 Adjustment to the design specification: the final implementation focuses on club discovery, membership, event registration, and commenting as the core workflow. This keeps the app aligned with the database schema already present in the project and concentrates on the main user stories.
 
