@@ -5,7 +5,7 @@
 {% block content %}
 <section class="card form-card">
   <h1>{% if heading %}{{ heading }}{% else %}Create item{% endif %}</h1>
-  <form method="post" novalidate>
+  <form class="stack-form" method="post" novalidate>
     {% csrf_token %}
     {% if form.errors %}
     <div class="error-summary" role="alert">
@@ -24,7 +24,9 @@
       {% endfor %}
     </div>
     {% endfor %}
-    <button class="button" type="submit">Save</button>
+    <div class="form-actions">
+      <button class="button" type="submit">Save</button>
+    </div>
   </form>
 </section>
 {% endblock %}

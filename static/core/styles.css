@@ -538,6 +538,22 @@ textarea {
   width: min(100%, 360px);
 }
 
+.stack-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  padding-top: 0.15rem;
+}
+
+.form-actions .button {
+  min-width: 130px;
+}
+
 .form-card {
   max-width: 720px;
   margin: 2rem auto;
