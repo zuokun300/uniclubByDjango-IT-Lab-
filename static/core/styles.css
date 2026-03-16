@@ -485,15 +485,28 @@ textarea {
 }
 
 .event-actions {
+  display: grid;
+  gap: 0.8rem;
+  width: 100%;
+  justify-items: start;
+}
+
+.management-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
-  align-items: center;
 }
 
 .registration-panel {
   display: grid;
   gap: 0.5rem;
+  width: min(100%, 360px);
+}
+
+.registration-panel .button,
+.status-pill {
+  width: 100%;
+  justify-content: center;
 }
 
 .status-pill {

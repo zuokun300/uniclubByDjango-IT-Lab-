@@ -43,8 +43,10 @@
         <p><strong>Confirmed:</strong> <span data-registration-count>{{ event.confirmed_count }}</span></p>
         <div class="event-actions">
           {% if can_create_event %}
-          <a class="button secondary" href="{% url 'event_update' event.pk %}">Edit event</a>
-          <a class="button danger" href="{% url 'event_delete' event.pk %}">Delete event</a>
+          <div class="management-actions">
+            <a class="button secondary" href="{% url 'event_update' event.pk %}">Edit event</a>
+            <a class="button danger" href="{% url 'event_delete' event.pk %}">Delete event</a>
+          </div>
           {% endif %}
           {% if user.is_authenticated %}
           <div class="registration-panel" data-registration-panel>
