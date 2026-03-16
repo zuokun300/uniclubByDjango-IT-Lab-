@@ -41,45 +41,51 @@
       </div>
       <div class="event-side">
         <p><strong>Confirmed:</strong> <span data-registration-count>{{ event.confirmed_count }}</span></p>
-        <div class="event-actions">
-          {% if can_create_event %}
-          <div class="management-actions">
-            <a class="button secondary" href="{% url 'event_update' event.pk %}">Edit event</a>
-            <a class="button danger" href="{% url 'event_delete' event.pk %}">Delete event</a>
-          </div>
-          {% endif %}
-          {% if user.is_authenticated %}
-          <div class="registration-panel" data-registration-panel>
-            {% if event.user_registration_status == "confirmed" %}
-            <span class="status-pill" data-registration-badge>Registered</span>
-            {% else %}
-            <button
-              class="button {% if event.user_registration_status == 'cancelled' %}secondary{% endif %}"
-              type="button"
-              data-register-button
-              data-url="{% url 'register_event' event.pk %}"
-            >
-              {% if event.user_registration_status == "cancelled" %}
-              Register again
-              {% else %}
-              Register instantly
-              {% endif %}
-            </button>
+        <div class="event-actions" data-event-actions>
+          <div class="event-action-row">
+            {% if can_create_event %}
+            <div class="management-actions">
+              <a class="button secondary" href="{% url 'event_update' event.pk %}">Edit event</a>
+              <a class="button danger" href="{% url 'event_delete' event.pk %}">Delete event</a>
+            </div>
             {% endif %}
-            <p
-              class="status-text{% if event.user_registration_status == 'confirmed' %} success{% endif %}"
-              data-register-status
-              aria-live="polite"
-            >
-              {% if event.user_registration_status == "confirmed" %}
-              Registered for {{ event.event_name }}.
-              {% elif event.user_registration_status == "cancelled" %}
-              Registration cancelled. You can register again.
-              {% endif %}
-            </p>
+            {% if user.is_authenticated %}
+            <div class="registration-panel" data-registration-panel>
+              <div class="registration-control" data-registration-control>
+                {% if event.user_registration_status == "confirmed" %}
+                <span class="status-pill" data-registration-badge>Registered</span>
+                {% else %}
+                <button
+                  class="button {% if event.user_registration_status == 'cancelled' %}secondary{% endif %}"
+                  type="button"
+                  data-register-button
+                  data-url="{% url 'register_event' event.pk %}"
+                >
+                  {% if event.user_registration_status == "cancelled" %}
+                  Register again
+                  {% else %}
+                  Register instantly
+                  {% endif %}
+                </button>
+                {% endif %}
+              </div>
+            </div>
+            {% else %}
+            <a class="button secondary" href="{% url 'login' %}">Log in to register</a>
+            {% endif %}
           </div>
-          {% else %}
-          <a class="button secondary" href="{% url 'login' %}">Log in to register</a>
+          {% if user.is_authenticated %}
+          <p
+            class="status-text{% if event.user_registration_status == 'confirmed' %} success{% endif %}"
+            data-register-status
+            aria-live="polite"
+          >
+            {% if event.user_registration_status == "confirmed" %}
+            Registered for {{ event.event_name }}.
+            {% elif event.user_registration_status == "cancelled" %}
+            Registration cancelled. You can register again.
+            {% endif %}
+          </p>
           {% endif %}
         </div>
       </div>

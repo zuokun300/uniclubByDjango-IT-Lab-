@@ -31,8 +31,8 @@ function wireRegistrationButtons() {
       badge.className = "status-pill";
       badge.setAttribute("data-registration-badge", "");
       badge.textContent = "Registered";
-      const status = panel.querySelector("[data-register-status]");
-      panel.insertBefore(badge, status);
+      const control = panel.querySelector("[data-registration-control]");
+      control.replaceChildren(badge);
     }
   }
 

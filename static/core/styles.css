@@ -486,9 +486,17 @@ textarea {
 
 .event-actions {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.65rem;
   width: 100%;
   justify-items: start;
+}
+
+.event-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: start;
+  width: 100%;
 }
 
 .management-actions {
@@ -498,12 +506,15 @@ textarea {
 }
 
 .registration-panel {
-  display: grid;
-  gap: 0.5rem;
   width: min(100%, 360px);
 }
 
-.registration-panel .button,
+.registration-control {
+  display: flex;
+  width: 100%;
+}
+
+.registration-control .button,
 .status-pill {
   width: 100%;
   justify-content: center;
@@ -524,6 +535,7 @@ textarea {
 .status-text {
   margin: 0;
   min-height: 1.5rem;
+  width: min(100%, 360px);
 }
 
 .form-card {
